@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="hy">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketGuide — Շուկայի վերլուծություն</title>
+
+    <style>
+        :root {
+            --navy: #102b49;
+            --blue: #1687e8;
+            --green: #1ca875;
+            --orange: #f39a13;
+            --purple: #8651df;
+            --ink: #17375e;
+            --muted: #61758e;
+            --bg: #f3f8fd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, "Noto Sans Armenian", sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        header {
+            background: var(--navy);
+            color: white;
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            box-shadow: 0 4px 16px #00152c33;
+        }
+
+        .logo {
+            font-size: 23px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #19b8f2;
+        }
+
+        nav {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #eaf4ff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        nav a:hover {
+            color: #54c8ff;
+        }
+
+        .btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 12px 17px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .blue {
+            background: var(--blue);
+        }
+
+        .green {
+            background: var(--green);
+        }
+
+        .orange {
+            background: var(--orange);
+        }
+
+        .purple {
+            background: var(--purple);
+        }
+
+        .hero {
+            padding: 54px 5%;
+            color: white;
+            background: linear-gradient(100deg,
+                    #061b2c 0%,
+                    #123b5c 60%,
+                    #14547b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero:after {
+            content: "↗  ₾  📈";
+            position: absolute;
+            right: 6%;
+            top: 15px;
+            font-size: 95px;
+            opacity: 0.12;
+        }
+
+        .hero-inner {
+            max-width: 1200px;
+            margin: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 4vw, 46px);
+            max-width: 680px;
+            line-height: 1.2;
+            margin: 0 0 16px;
+        }
+
+        .hero h1 span {
+            color: #44c9f6;
+        }
+
+        .hero p {
+            max-width: 660px;
+            line-height: 1.7;
+            color: #d9eaf8;
+        }
+
+        .quick {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .quick a {
+            text-decoration: none;
+        }
+
+        main {
+            max-width: 1300px;
+            margin: 24px auto;
+            padding: 0 22px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        .panel,
+        .card {
+            background: white;
+            border: 1px solid #e1ebf6;
+            border-radius: 13px;
+            box-shadow: 0 4px 15px #17375e08;
+        }
+
+        .sidebar {
+            padding: 18px;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            margin: 4px 0 16px;
+        }
+
+        .side-link {
+            display: block;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--ink);
+            margin: 4px 0;
+        }
+
+        .side-link:hover,
+        .side-link.active {
+            background: #e4f2ff;
+            color: #087bd5;
+        }
+
+        .content {
+            min-width: 0;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin: 4px 0 18px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 13px;
+        }
+
+        .concept {
+            padding: 19px 16px;
+            color: white;
+            min-height: 165px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .concept .emoji {
+            font-size: 30px;
+        }
+
+        .concept h3 {
+            margin: 8px 0;
+        }
+
+        .concept p {
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .c-blue {
+            background: linear-gradient(135deg, #70b3ff, #398df0);
+        }
+
+        .c-green {
+            background: linear-gradient(135deg, #6ecfa8, #24a875);
+        }
+
+        .c-orange {
+            background: linear-gradient(135deg, #ffbb4e, #f18d00);
+        }
+
+        .c-purple {
+            background: linear-gradient(135deg, #b78af6, #8750df);
+        }
+
+        .flow {
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .flow-grid {
+            display: grid;
+            grid-template-columns: 1fr 90px 1fr;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .flow-box {
+            padding: 18px;
+            border: 2px solid;
+            border-radius: 12px;
+            background: #f7fbff;
+        }
+
+        .flow-box strong {
+            display: block;
+            margin: 7px 0;
+        }
+
+        .arrow {
+            font-size: 30px;
+            color: var(--blue);
+        }
+
+        .equilibrium {
+            border: 2px solid var(--purple);
+            background: #f5efff;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            color: var(--purple);
+            padding: 12px;
+        }
+
+        .flow-bottom {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .lower {
+            display: grid;
+            grid-template-columns: 1.2fr 1.1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .card h3 {
+            font-size: 17px;
+            margin: 0 0 14px;
+        }
+
+        .chart-wrap {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .chart-wrap svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .legend {
+            font-size: 12px;
+            color: var(--muted);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .legend span:before {
+            content: "";
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background: currentColor;
+        }
+
+        .notes {
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .notes li {
+            margin: 12px 0;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .notes li:before {
+            content: "✓";
+            color: var(--green);
+            font-weight: bold;
+            margin-right: 9px;
+        }
+
+        .tool-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .tool-link:nth-of-type(1) {
+            background: #e6f3ff;
+            color: #087bd5;
+        }
+
+        .tool-link:nth-of-type(2) {
+            background: #e3f7ed;
+            color: #12875e;
+        }
+
+        .tool-link:nth-of-type(3) {
+            background: #fff0d6;
+            color: #c77a00;
+        }
+
+        .tool-link:nth-of-type(4) {
+            background: #f1e8ff;
+            color: #7840ca;
+        }
+
+        .calc-section {
+            margin-top: 22px;
+            padding: 24px;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .field {
+            margin: 14px 0;
+        }
+
+        .field label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd9e8;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .result {
+            background: #edf7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .result strong {
+            font-size: 27px;
+            color: #087bd5;
+        }
+
+        .explain {
+            line-height: 1.65;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .notice {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        footer {
+            background: var(--navy);
+            color: #d7e7f7;
+            margin-top: 30px;
+            padding: 25px 5%;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        footer a {
+            color: #d7e7f7;
+            text-decoration: none;
+            margin-right: 12px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 950px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .lower {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .lower .card:last-child {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 620px) {
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            nav {
+                gap: 10px;
+            }
+
+            .hero {
+                padding: 38px 6%;
+            }
+
+            .cards,
+            .lower,
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+            .equilibrium {
+                margin: 5px auto;
+            }
+
+            .lower .card:last-child {
+                grid-column: auto;
+            }
+
+            main {
+                padding: 0 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ԳԼԽԱՎՈՐ ՄԵՆՅՈՒ -->
+
+    <header>
+        <div class="logo">📈 Market<span>Guide</span></div>
+
+        <nav aria-label="Հիմնական նավարկում">
+            <a href="#home">Գլխավոր</a>
+            <a href="#market">Շուկա</a>
+            <a href="#demand">Պահանջարկ</a>
+            <a href="#supply">Առաջարկ</a>
+            <a href="#price">Շուկայական գին</a>
+            <a href="#calculator">Հաշվիչ</a>
+        </nav>
+
+        <button class="btn blue" onclick="document.getElementById('calculator').scrollIntoView()">
+            Սկսել
+        </button>
+    </header>
+
+    <!-- ԳԼԽԱՎՈՐ ԷՋ -->
+
+    <section class="hero" id="home">
+        <div class="hero-inner">
+
+            <h1>
+                Շուկա, պահանջարկ, առաջարկ և
+                <span>շուկայական գին</span>
+            </h1>
+
+            <p>
+                Ուսումնասիրիր, թե ինչպես են գնորդների և վաճառողների
+                որոշումները ձևավորում շուկայական գինը։ Սովորիր հիմնական
+                հասկացությունները և փորձիր հաշվիչը։
+            </p>
+
+            <div class="quick">
+                <a class="btn blue" href="#market">
+                    ⌂ Գլխավոր թեմաներ
+                </a>
+
+                <a class="btn green" href="#demand">
+                    ↗ Պահանջարկ
+                </a>
+
+                <a class="btn orange" href="#supply">
+                    ▣ Առաջարկ
+                </a>
+
+                <a class="btn purple" href="#price">
+                    ◆ Շուկայական գին
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <main>
+
+        <div class="layout">
+
+            <!-- ԿՈՂԱՅԻՆ ԲՈՎԱՆԴԱԿՈՒԹՅՈՒՆ -->
+
+            <aside class="panel sidebar">
+
+                <h3>📑 Բովանդակություն</h3>
+
+                <a class="side-link active" href="#home">
+                    ⌂ Գլխավոր էջ
+                </a>
+
+                <a class="side-link" href="#market">
+                    ▤ Շուկա
+                </a>
+
+                <a class="side-link" href="#demand">
+                    ♟ Պահանջարկ
+                </a>
+
+                <a class="side-link" href="#supply">
+                    🚚 Առաջարկ
+                </a>
+
+                <a class="side-link" href="#price">
+                    ◆ Շուկայական գին
+                </a>
+
+                <a class="side-link" href="#chart">
+                    📈 Գրաֆիկ
+                </a>
+
+                <a class="side-link" href="#calculator">
+                    🧮 Հաշվիչ
+                </a>
+
+            </aside>
+
+            <!-- ՀԻՄՆԱԿԱՆ ԲՈՎԱՆԴԱԿՈՒԹՅՈՒՆ -->
+
+            <section class="content" id="market">
+
+                <h2 class="section-title">
+                    Հիմնական հասկացություններ
+                </h2>
+
+                <div class="cards">
+
+                    <article class="concept c-blue">
+
+                        <div class="emoji">🏪</div>
+
+                        <h3>Շուկա</h3>
+
+                        <p>
+                            Գնորդների և վաճառողների փոխազդեցության համակարգ,
+                            որտեղ փոխանակվում են ապրանքներ ու ծառայություններ։
+                        </p>
+
+                    </article>
+
+                    <article class="concept c-green" id="demand">
+
+                        <div class="emoji">👥</div>
+
+                        <h3>Պահանջարկ</h3>
+
+                        <p>
+                            Ապրանքի այն քանակը, որը գնորդները ցանկանում և կարող
+                            են ձեռք բերել տարբեր գների դեպքում։
+                        </p>
+
+                    </article>
+
+                    <article class="concept c-orange" id="supply">
+
+                        <div class="emoji">🚚</div>
+
+                        <h3>Առաջարկ</h3>
+
+                        <p>
+                            Ապրանքի այն քանակը, որը վաճառողները ցանկանում և կարող
+                            են վաճառել տարբեր գների դեպքում։
+                        </p>
+
+                    </article>
+
+                    <article class="concept c-purple" id="price">
+
+                        <div class="emoji">🏷️</div>
+
+                        <h3>Շուկայական գին</h3>
+
+                        <p>
+                            Գինը, որը ձևավորվում է պահանջարկի և առաջարկի
+                            փոխազդեցության արդյունքում։
+                        </p>
+
+                    </article>
+
+                </div>
+
+                <!-- ՇՈՒԿԱՅԻ ՍԽԵՄԱ -->
+
+                <div class="panel flow">
+
+                    <h3>🔗 Շուկայի աշխատանքի սխեմա</h3>
+
+                    <div class="flow-grid">
+
+                        <div class="flow-box" style="border-color:#20ad77;background:#edfff6">
+
+                            <div style="font-size:28px">👥</div>
+
+                            <strong>Պահանջարկ (գնորդներ)</strong>
+
+                            <small>Ցանկանում են գնել</small>
+
+                        </div>
+
+                        <div class="arrow">⟶</div>
+
+                        <div class="equilibrium">
+                            Շուկայական<br>գին
+                        </div>
+
+                        <div class="flow-box" style="border-color:#f39a13;background:#fff8e9">
+
+                            <div style="font-size:28px">🚚</div>
+
+                            <strong>Առաջարկ (վաճառողներ)</strong>
+
+                            <small>Ցանկանում են վաճառել</small>
+
+                        </div>
+
+                        <div class="arrow">⟵</div>
+
+                        <div class="flow-bottom">
+                            Գինը ազդում է գնորդների և վաճառողների որոշումների վրա։
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- ԳՐԱՖԻԿ, ԿԱՆՈՆՆԵՐ ԵՎ ԳՈՐԾԻՔՆԵՐ -->
+
+        <div class="lower" id="chart">
+
+            <!-- ԳՐԱՖԻԿ -->
+
+            <section class="card">
+
+                <h3>📊 Պահանջարկի և առաջարկի գրաֆիկ</h3>
+
+                <div class="legend">
+                    <span style="color:#20ad77">Պահանջարկ</span>
+                    <span style="color:#f39a13">Առաջարկ</span>
+                    <span style="color:#8b4ce0">Հավասարակշռություն</span>
+                </div>
+
+                <div class="chart-wrap">
+
+                    <svg viewBox="0 0 360 230" role="img" aria-label="Պահանջարկի և առաջարկի պարզ գրաֆիկ">
+
+                        <g stroke="#e3ebf4" stroke-width="1">
+
+                            <path d="M45 20V190H335" />
+
+                            <path d="M45 148H335" />
+                            <path d="M45 106H335" />
+                            <path d="M45 64H335" />
+
+                            <path d="M100 20V190" />
+                            <path d="M155 20V190" />
+                            <path d="M210 20V190" />
+                            <path d="M265 20V190" />
+                            <path d="M320 20V190" />
+
+                        </g>
+
+                        <g fill="#5e7189" font-size="10">
+
+                            <text x="20" y="193">0</text>
+                            <text x="12" y="151">10</text>
+                            <text x="12" y="109">20</text>
+                            <text x="12" y="67">30</text>
+                            <text x="12" y="24">40</text>
+
+                            <text x="42" y="207">0</text>
+                            <text x="95" y="207">10</text>
+                            <text x="150" y="207">20</text>
+                            <text x="205" y="207">30</text>
+                            <text x="260" y="207">40</text>
+                            <text x="315" y="207">50</text>
+
+                            <text x="150" y="225">Քանակ</text>
+                            <text x="4" y="12">Գին</text>
+
+                        </g>
+
+                        <!-- Պահանջարկի գիծ -->
+
+                        <polyline points="65,38 120,63 175,88 230,113 285,138" fill="none" stroke="#20ad77"
+                            stroke-width="3" />
+
+                        <!-- Առաջարկի գիծ -->
+
+                        <polyline points="65,163 120,147 175,130 230,105 285,82" fill="none" stroke="#f39a13"
+                            stroke-width="3" />
+
+                        <!-- Հավասարակշռության կետ -->
+
+                        <path d="M230 105V190M45 105H230" stroke="#8b4ce0" stroke-dasharray="5 4" stroke-width="1.5" />
+
+                        <circle cx="230" cy="105" r="5" fill="#8b4ce0" />
+
+                        <text x="239" y="98" fill="#8b4ce0" font-size="11">
+                            Հավասարակշռություն
+                        </text>
+
+                    </svg>
+
+                </div>
+
+            </section>
+
+            <!-- ՀԻՄՆԱԿԱՆ ԿԱՆՈՆՆԵՐ -->
+
+            <section class="card">
+
+                <h3>💡 Հիմնական կանոններ</h3>
+
+                <ul class="notes">
+
+                    <li>
+                        Եթե գինը բարձրանում է, պահանջվող քանակը սովորաբար նվազում է։
+                    </li>
+
+                    <li>
+                        Եթե գինը բարձրանում է, առաջարկվող քանակը սովորաբար աճում է։
+                    </li>
+
+                    <li>
+                        Հավասարակշռության կետում պահանջարկի և առաջարկի
+                        քանակները համընկնում են։
+                    </li>
+
+                    <li>
+                        Շուկայական գնի վրա կարող են ազդել ծախսերը,
+                        մրցակցությունը և նախասիրությունները։
+                    </li>
+
+                </ul>
+
+                <button class="btn blue" onclick="document.getElementById('calculator').scrollIntoView()">
+                    Փորձել հաշվիչը →
+                </button>
+
+            </section>
+
+            <!-- ՕԳՏԱԿԱՐ ԳՈՐԾԻՔՆԵՐ -->
+
+            <section class="card">
+
+                <h3>🛠️ Օգտակար գործիքներ</h3>
+
+                <a class="tool-link" href="#calculator">
+                    🧮 Գնային հաշվիչ <span>›</span>
+                </a>
+
+                <a class="tool-link" href="#calculator">
+                    👥 Պահանջարկի օրինակ <span>›</span>
+                </a>
+
+                <a class="tool-link" href="#calculator">
+                    🚚 Առաջարկի օրինակ <span>›</span>
+                </a>
+
+                <a class="tool-link" href="#chart">
+                    📈 Գրաֆիկի բացատրություն <span>›</span>
+                </a>
+
+            </section>
+
+        </div>
+
+        <!-- ՀԱՇՎԻՉ -->
+
+        <section class="panel calc-section" id="calculator">
+
+            <h2 class="section-title">
+                🧮 Շուկայական արժեքի հաշվիչ
+            </h2>
+
+            <p class="explain">
+                Մուտքագրիր ապրանքի գինը և քանակը՝ ընդհանուր արժեքը հաշվելու համար։
+                Սա ուսումնական հաշվիչ է, ոչ թե իրական շուկայի գնանշում։
+            </p>
+
+            <div class="calc-grid">
+
+                <div>
+
+                    <div class="field">
+
+                        <label for="item">
+                            Ապրանքի անվանում
+                        </label>
+
+                        <input id="item" value="Ապրանք" placeholder="Օրինակ՝ խնձոր">
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="unitPrice">
+                            Մեկ միավորի գին (դրամ)
+                        </label>
+
+                        <input id="unitPrice" type="number" min="0" value="500">
+
+                    </div>
+
+                    <div class="field">
+
+                        <label for="quantity">
+                            Քանակ
+                        </label>
+
+                        <input id="quantity" type="number" min="0" value="10">
+
+                    </div>
+
+                    <button class="btn blue" onclick="calculate()">
+                        Հաշվել արժեքը
+                    </button>
+
+                    <button class="btn" style="background:#e8eef5;color:#17375e" onclick="resetCalc()">
+                        Վերականգնել
+                    </button>
+
+                </div>
+
+                <div>
+
+                    <div class="result">
+
+                        <div id="resultLabel">
+                            Ապրանքի ընդհանուր արժեքը
+                        </div>
+
+                        <strong id="resultValue">
+                            5 000 դրամ
+                        </strong>
+
+                        <p id="resultText" class="explain">
+                            10 միավոր × 500 դրամ
+                        </p>
+
+                    </div>
+
+                    <p class="explain">
+                        Հիշիր՝ իրական շուկայական արժեքը կարող է կախված լինել
+                        ապրանքի որակից, գտնվելու վայրից, պահանջարկից,
+                        առաջարկից և մրցակցությունից։
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <p class="notice">
+            Նշում․ գրաֆիկը և թվային օրինակները ցուցադրական են և
+            չեն ներկայացնում իրական ժամանակի շուկայական տվյալներ։
+        </p>
+
+    </main>
+
+    <!-- ԿԱՅՔԻ ՆԵՐՔԵՎԻ ՄԱՍ -->
+
+    <footer>
+
+        <div>
+
+            <div class="logo">
+                📈 Market<span>Guide</span>
+            </div>
+
+            <small>Շուկայի հասկանալի ուղեցույց</small>
+
+        </div>
+
+        <div>
+
+            <a href="#home">Գլխավոր</a>
+            <a href="#market">Թեմաներ</a>
+            <a href="#chart">Գրաֆիկ</a>
+            <a href="#calculator">Հաշվիչ</a>
+
+        </div>
+
+        <small>
+            © 2026 MarketGuide · Ուսումնական նախագիծ
+        </small>
+
+    </footer>
+
+    <!-- JAVASCRIPT -->
+
+    <script>
+
+        // Թվերի ձևավորում
+
+        function fmt(n) {
+            return new Intl.NumberFormat('hy-AM', {
+                maximumFractionDigits: 2
+            }).format(n);
+        }
+
+        // Ապրանքի ընդհանուր արժեքի հաշվարկ
+
+        function calculate() {
+
+            const p = Number(
+                document.getElementById('unitPrice').value
+            );
+
+            const q = Number(
+                document.getElementById('quantity').value
+            );
+
+            const name =
+                document.getElementById('item').value.trim() || 'Ապրանք';
+
+            if (
+                p < 0 ||
+                q < 0 ||
+                !Number.isFinite(p) ||
+                !Number.isFinite(q)
+            ) {
+
+                document.getElementById('resultValue').textContent =
+                    'Ստուգիր տվյալները';
+
+                document.getElementById('resultText').textContent =
+                    'Գինը և քանակը պետք է լինեն զրո կամ դրական։';
+
+                return;
+            }
+
+            const total = p * q;
+
+            document.getElementById('resultLabel').textContent =
+                name + ' — ընդհանուր արժեք';
+
+            document.getElementById('resultValue').textContent =
+                fmt(total) + ' դրամ';
+
+            document.getElementById('resultText').textContent =
+                fmt(q) + ' միավոր × ' + fmt(p) + ' դրամ';
+        }
+
+        // Սկզբնական տվյալների վերականգնում
+
+        function resetCalc() {
+
+            document.getElementById('item').value = 'Ապրանք';
+
+            document.getElementById('unitPrice').value = 500;
+
+            document.getElementById('quantity').value = 10;
+
+            calculate();
+        }
+
+        // Էջը բացելիս ցույց տալ սկզբնական արդյունքը
+
+        calculate();
+
+    </script>
+
+</body>
+
+</html>
